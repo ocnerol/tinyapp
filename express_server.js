@@ -35,6 +35,13 @@ const urlDatabase = {
   '9sm5xK': 'http://www.google.com'
 };
 
+app.post('/urls/:shortURL/delete', (req, res) => {
+  console.log('request params when deleting a url', req.params);
+  const shortURL = req.params.shortURL;
+  delete urlDatabase[shortURL];
+  res.redirect('/urls')
+});
+
 app.get('/', (req, res) => {
   res.send('Hello!');
 });
@@ -82,6 +89,8 @@ app.get('/u/:shortURL', (req, res) => {
   res.redirect(longURL);
   }
 });
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
