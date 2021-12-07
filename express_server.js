@@ -65,14 +65,24 @@ app.post('/urls', (req, res) => {
 
 app.get('/urls/:shortURL', (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  const { shortURL } = templateVars;
+  if ( !shortURL || !urlDatabase[shortURL]) {
+    res.sendStatus(404);
+  }
   res.render('urls_show', templateVars);
 });
 
 app.get('/u/:shortURL', (req, res) => {
+  const shortURL = req.params.shortURL;
+  console.log(req.params);
+  if (!shortURL || !urlDatabase[shortURL]) {
+    res.sendStatus(404);
+  } else {
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
+  }
 });
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
-})
+});
