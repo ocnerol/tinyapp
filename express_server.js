@@ -3,10 +3,12 @@ const app = express();
 const port = 8080; // default port is 8080
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(morgan('dev'));
 
 function generateRandomString() {
   const letters = [
