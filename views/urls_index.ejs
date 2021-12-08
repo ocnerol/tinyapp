@@ -16,6 +16,7 @@
       <table class="table">
         <thead>
           <tr>
+            <th scope="col">Edit</th>
             <th scope="col">Short URL</th>
             <th scope="col">Long URL</th>
           </tr>
@@ -23,6 +24,9 @@
         <tbody>
           <% for(let url in urls) { %>
             <tr>
+              <td>
+                <a href="urls/<%= url %>">Edit</a>
+              </td>
               <td><%= url %></td>
               <td><%= urls[url] %></td>
               <td>
@@ -30,6 +34,7 @@
                   <input type="Submit" name="Delete" value="Delete">
                 </form>
               </td>
+              
             </tr>
           <% } %>
         </tbody>

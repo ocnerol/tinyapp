@@ -24,7 +24,9 @@
           <div class="form">
             <label for="longURL">Update short URL destination: </label>
             <input class="form" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
+            <input class="form" type="hidden"  name="shortURL" value="<%= shortURL %>">
             <button type="submit" class="btn btn-primary">Update</button>
+            
           </div>
         </form>
         </p>

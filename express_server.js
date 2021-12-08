@@ -64,16 +64,23 @@ app.get('/hello', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  //console.log(req.body); // log the POST request body to the console
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
-  res.redirect(302, `/urls/${shortURL}`);
+  const longURL = req.body.longURL;
+  let shortURL = req.body.shortURL;
+  if (shortURL) {                          // if we are updating destination of a shortURL
+    delete urlDatabase[shortURL];
+    urlDatabase[shortURL] = longURL;
+    res.redirect(302, `/urls/${shortURL}`);
+  } else {                                  // if we are storing a new shortURL
+    shortURL = generateRandomString();
+    urlDatabase[shortURL] = req.body.longURL;
+    res.redirect(302, `/urls/${shortURL}`);
+  }
 });
 
 app.get('/urls/:shortURL', (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   const { shortURL } = templateVars;
-  if ( !shortURL || !urlDatabase[shortURL]) {
+  if (!shortURL || !urlDatabase[shortURL]) {
     res.sendStatus(404);
   }
   res.render('urls_show', templateVars);
@@ -85,8 +92,8 @@ app.get('/u/:shortURL', (req, res) => {
   if (!shortURL || !urlDatabase[shortURL]) {
     res.sendStatus(404);
   } else {
-  const longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
+    const longURL = urlDatabase[req.params.shortURL];
+    res.redirect(longURL);
   }
 });
 
