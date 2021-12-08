@@ -122,7 +122,15 @@ app.post('/urls', (req, res) => {
   }
 });
 
+// submit new user registration and redirect to /urls
+app.post('/register', (req, res) => {
+  const username = req.body.email;
+  const password = req.body.password;
 
+  if (!username || !password) {
+    return res.status(400).send('You cannot leave either of the fields blank. Please try to register again.')
+  }
+});
 
 
 // Delete
