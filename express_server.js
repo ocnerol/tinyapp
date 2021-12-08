@@ -32,9 +32,19 @@ function generateRandomString() {
   return result;
 }
 
+// 'Database'
+
 const urlDatabase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
   '9sm5xK': 'http://www.google.com'
+};
+
+const users = {
+  "user0RandomID": {
+    id: "user0RandomID",
+    email: "user0@example.com",
+    password: "purple-monkey-dinosaur"
+  }
 };
 
 app.post('/urls/:shortURL/delete', (req, res) => {
