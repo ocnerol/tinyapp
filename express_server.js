@@ -136,24 +136,24 @@ app.post('/urls', (req, res) => {
 
 // submit new user registration and redirect to /urls
 app.post('/register', (req, res) => {
-  const username = req.body.email;
+  const email = req.body.email;
   const password = req.body.password;
 
-  if (!username || !password) {
+  if (!email || !password) {
     return res.status(401).send('You cannot leave either of the fields blank. Please try to register again.')
   }
 
-  const user = findUserByEmail(username);
+  const user = findUserByEmail(email);
 
   if (user) {
     return res.status(400).send('A user with that email already exists. Please try logging in, or register with a different email address.');
   }
-  
+
   const newUserID = generateRandomString(); 
 
   users[newUserID] = {
     id: newUserID,
-    email: username,
+    email: email,
     password: password
   }
 
