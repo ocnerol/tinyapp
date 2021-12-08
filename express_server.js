@@ -34,6 +34,15 @@ function generateRandomString() {
   return result;
 }
 
+function findUserByEmail(email) {
+  for (const userID of users) {
+    const user = users[userID];
+    if (user.email === email) {
+      return user;
+    }
+  }
+  return null;
+};
 // 'Database'
 
 const urlDatabase = {
@@ -130,6 +139,8 @@ app.post('/register', (req, res) => {
   if (!username || !password) {
     return res.status(400).send('You cannot leave either of the fields blank. Please try to register again.')
   }
+
+  if ()
 });
 
 
