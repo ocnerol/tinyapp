@@ -68,9 +68,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
+  const user = users[req.cookies.user_id];
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    user,
   };
   res.render('urls_index', templateVars);
 });
@@ -78,8 +79,9 @@ app.get('/urls', (req, res) => {
 // Read
 
 app.get('/urls/new', (req, res) => {
+  const user = users[req.cookies.user_id];
   const templateVars = {
-    username: req.cookies["username"]
+    user,
   }
   res.render('urls_new', templateVars);
 });
@@ -94,18 +96,20 @@ app.get('/hello', (req, res) => {
 
 // render registration page
 app.get('/register', (req, res) => {
+  const user = users[req.cookies.user_id];
   const templateVars = {
-    username: req.cookies["username"]
+    user,
   };
   res.render('urls_register', templateVars);
 });
 
 // render page for given shortURL on tinyApp
 app.get('/urls/:shortURL', (req, res) => {
+  const user = users[req.cookies.user_id];
   const templateVars = {
+    user,
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies["username"]
   };
   const { shortURL } = templateVars;
   if (!shortURL || !urlDatabase[shortURL]) {
