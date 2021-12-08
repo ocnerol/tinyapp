@@ -47,16 +47,21 @@ const users = {
   }
 };
 
-app.post('/urls/:shortURL/delete', (req, res) => {
-  console.log('request params when deleting a url', req.params);
-  const shortURL = req.params.shortURL;
-  delete urlDatabase[shortURL];
-  res.redirect('/urls')
-});
+// Browse
 
 app.get('/', (req, res) => {
   res.send('Hello!');
 });
+
+app.get('/urls', (req, res) => {
+  const templateVars = {
+    urls: urlDatabase,
+    username: req.cookies["username"]
+  };
+  res.render('urls_index', templateVars);
+});
+
+// Read
 
 app.get('/urls/new', (req, res) => {
   const templateVars = {
@@ -69,18 +74,38 @@ app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get('/urls', (req, res) => {
-  const templateVars = {
-    urls: urlDatabase,
-    username: req.cookies["username"]
-  };
-  res.render('urls_index', templateVars);
-});
-
 app.get('/hello', (req, res) => {
   res.send('<html><body>Hello <b>World</b></body></html>\n');
 });
 
+// render registration page
+app.get('/register', (req, res) => {
+  const templateVars = {
+    username: req.cookies["username"]
+  };
+  res.render('urls_register', templateVars);
+});
+
+// render page for given shortURL on tinyApp
+app.get('/urls/:shortURL', (req, res) => {
+  const templateVars = {
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL],
+    username: req.cookies["username"]
+  };
+  const { shortURL } = templateVars;
+  if (!shortURL || !urlDatabase[shortURL]) {
+    res.sendStatus(404);
+  }
+  res.render('urls_show', templateVars);
+});
+
+// Edit
+
+
+// Add
+
+// add new URL or updating existing shortURL with new longURL
 app.post('/urls', (req, res) => {
   const longURL = req.body.longURL;
   let shortURL = req.body.shortURL;
@@ -95,18 +120,19 @@ app.post('/urls', (req, res) => {
   }
 });
 
-app.get('/urls/:shortURL', (req, res) => {
-  const templateVars = {
-    shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies["username"]
-  };
-  const { shortURL } = templateVars;
-  if (!shortURL || !urlDatabase[shortURL]) {
-    res.sendStatus(404);
-  }
-  res.render('urls_show', templateVars);
+
+
+
+// Delete
+
+// Delete a stored shortURL (and associated longURL)
+app.post('/urls/:shortURL/delete', (req, res) => {
+  console.log('request params when deleting a url', req.params);
+  const shortURL = req.params.shortURL;
+  delete urlDatabase[shortURL];
+  res.redirect('/urls')
 });
+
 
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
@@ -134,9 +160,3 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
-app.get('/register', (req, res) => {
-  const templateVars = {
-    username: req.cookies["username"]
-  };
-  res.render('urls_register', templateVars);
-});
