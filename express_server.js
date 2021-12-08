@@ -20,8 +20,8 @@ const urlDatabase = {
 const users = {
   "user0RandomID": {
     id: "user0RandomID",
-    email: "user0@example.com",
-    password: "purple-monkey-dinosaur"
+    email: "u@u.com",
+    password: "abcd"
   }
 };
 
@@ -52,7 +52,7 @@ function generateRandomString() {
 }
 
 function findUserByEmail(email) {
-  for (const userID of users) {
+  for (const userID in users) {
     const user = users[userID];
     if (user.email === email) {
       return user;
@@ -140,10 +140,26 @@ app.post('/register', (req, res) => {
   const password = req.body.password;
 
   if (!username || !password) {
-    return res.status(400).send('You cannot leave either of the fields blank. Please try to register again.')
+    return res.status(401).send('You cannot leave either of the fields blank. Please try to register again.')
   }
 
-  if ()
+  const user = findUserByEmail(username);
+
+  if (user) {
+    return res.status(400).send('A user with that email already exists. Please try logging in, or register with a different email address.');
+  }
+  
+  const newUserID = generateRandomString(); 
+
+  users[newUserID] = {
+    id: newUserID,
+    email: username,
+    password: password
+  }
+
+  res.cookie('user_id', newUserID);
+  console.log('users database object now:', users);
+  res.redirect('/urls');
 });
 
 
