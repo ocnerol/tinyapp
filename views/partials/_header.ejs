@@ -19,7 +19,8 @@
       <div>
         <form class="form" method="POST" action="/logout">
           <div class="form">
-            <button type="submit" style= margin-left:20px class="btn btn-primary">Logout</button>
+            <input class="form" type="hidden" name="cookie-username" value=<%= username %>>
+            <button type="submit" style=margin-left:20px class="btn btn-primary">Logout</button>
           </div>
         </form>
       </div>
