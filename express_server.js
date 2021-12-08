@@ -123,3 +123,10 @@ app.post('/logout', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+app.get('/register', (req, res) => {
+  const templateVars = {
+    username: req.cookies["username"]
+  };
+  res.render('urls_register', templateVars);
+});
