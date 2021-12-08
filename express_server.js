@@ -42,7 +42,7 @@ function generateRandomString() {
       const newNumber = Math.floor(Math.random() * 10); // random number (integer) from 0 to 9
       result += newNumber;
     } else {
-      const randomIndex = Math.floor(Math.random() * 53); // random number (integer) from 0 to 52 inclusive
+      const randomIndex = Math.floor(Math.random() * letters.length); // random number (integer) from 0 to length of letters array - 1
       const newLetter = letters[randomIndex];
       result += newLetter;
     }
