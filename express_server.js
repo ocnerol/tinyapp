@@ -125,7 +125,7 @@ app.get('/urls/:shortURL', (req, res) => {
   const templateVars = {
     user,
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
+    shortURLInfo: urlDatabase[req.params.shortURL],
   };
   const { shortURL } = templateVars;
   if (!shortURL || !urlDatabase[shortURL]) {
