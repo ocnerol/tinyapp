@@ -25,10 +25,15 @@
       </div>
       <% } else { %>
 
-        <form class="form" method="POST" action="/login">
+        <form class="form" method="GET" action="/login">
           <div class="form">
-            <input class="form" type="text" name="username" placeholder="Username" style="width: 300px; margin:1em">
-            <button type="submit" class="btn btn-outline-light">Login</button>
+            <button type="submit" style="margin-right: 10px" class="btn btn-outline-light">Login</button>
+          </div>
+        </form>
+
+        <form class="form" method="GET" action="/register">
+          <div class="form">
+            <button type="submit" class="btn btn-outline-light">Register</button>
           </div>
         </form>
         <% } %>
