@@ -265,7 +265,13 @@ app.post('/register', (req, res) => {
 
 // Delete a stored shortURL (and associated longURL)
 app.post('/urls/:shortURL/delete', (req, res) => {
-  console.log('request params when deleting a url', req.params);
+  const user = req.cookies.user_id;
+  if (!user) {
+    const templateVars = {
+      user
+    };
+    return res.render('login_required', templateVars);
+  }
   const shortURL = req.params.shortURL;
   delete urlDatabase[shortURL];
   res.redirect('/urls')
