@@ -144,7 +144,7 @@ app.post('/register', (req, res) => {
   const password = req.body.password;
 
   if (!email || !password) {
-    return res.status(401).send('You cannot leave either of the fields blank. Please try to register again.')
+    return res.status(400).send('You cannot leave either of the fields blank. Please try to register again.')
   }
 
   const user = findUserByEmail(email);
