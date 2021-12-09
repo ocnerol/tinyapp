@@ -142,16 +142,23 @@ app.get('/register', (req, res) => {
 // render page for given shortURL on tinyApp
 app.get('/urls/:shortURL', (req, res) => {
   const user = users[req.cookies.user_id];
+  const shortURL = req.params.shortURL;
 
   if (!user) {
     return res.status(401).send(`You must be logged in to view this content. Please login at ${domain}login.`);
   }
+  const urlsObjectsForUser = urlsForUser(user.id);
+  const urlsforUser = Object.keys(urlsObjectsForUser);
+
+  if (!urlsforUser.includes(shortURL)) {
+    return res.status(403).send('You are not authorized to view this content.');
+  }
+
   const templateVars = {
     user,
-    shortURL: req.params.shortURL,
+    shortURL: shortURL,
     shortURLInfo: urlDatabase[req.params.shortURL],
   };
-  const { shortURL } = templateVars;
   if (!shortURL || !urlDatabase[shortURL]) {
     res.sendStatus(404);
   }
