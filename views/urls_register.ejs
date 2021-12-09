@@ -9,27 +9,38 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
     integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-  <title>Register - TinyApp</title>
+  <title>Create Account - TinyApp</title>
 </head>
 
 <body>
   <%- include('./partials/_header'); %>
+    <main style="margin: 1em;">
+      <p>
+      <h3>Create Account</h3>
+      </p>
+      <form action="/register" method="POST">
+        <label for="Email">E-mail address:</label>
+        <br />
+        <input type="email" style="margin-bottom: 1em;" name="email" placeholder="Enter email">
+        <br />
 
-  <h3>Register</h3>
-  <form class="form-inline" action="/register" method="POST">
-    <div class="form-group mb-2">
-      <label for="Email">E-mail:</label>
-      <input class="form-control" type="email" name="email" placeholder="e-mail" style="width: 300px; margin: 1em">
-      <label for="Password">Enter a password:</label>
-      <input class="form-control" type="password" name="password" style="width: 300px; margin: 1em">
-      <button type="submit" class="bttn btn-primary">Register</button>
-    </div>
+        <label for="Password">Password:</label>
+        <br />
+        <input type="password" name="password" placeholder="Enter password">
+        <br />
+        <button type="submit" style="margin-top: 1em" class="btn btn-primary">Register</button>
 
-  </form>
-
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      </form>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"></script>
 </body>
 
 </html>
