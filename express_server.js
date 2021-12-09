@@ -187,7 +187,7 @@ app.get('/login', (req, res) => {
 
 // add new URL or updating existing shortURL with new longURL
 app.post('/urls', (req, res) => {
-  const user = req.cookies.user_id;
+  const user = users[req.cookies.user_id];
   const startsWithURLPrefix = (url) => {
     if (url.startsWith('http://www.')) {
       return url;
@@ -208,19 +208,20 @@ app.post('/urls', (req, res) => {
   const longURL = startsWithURLPrefix(req.body.longURL);
   let shortURL = req.body.shortURL;
 
-  
-
-  const shortURLsOfUser = object.keys(urlsForUser(user.email));
+  const shortURLsOfUser = Object.keys(urlsForUser(user.id));
   if (shortURL) {                             // if we are updating destination of a shortURL
     if (shortURLsOfUser.includes(shortURL)) { // if the shortURL we are updating belongs to the current user
       delete urlDatabase[shortURL];
       urlDatabase[shortURL] = {
         longURL,
-        userID: user
+        userID: user.id
       }
-      res.redirect(302, `/urls/${shortURL}`);
+      return res.redirect(302, `/urls/${shortURL}`);
     } else {
-      res.render('login_required');
+      const templateVars = {
+        user
+      };
+      return res.render('login_required', templateVars);
     }
   } else {                                  // if we are storing a new shortURL
     shortURL = generateRandomString();
@@ -228,7 +229,7 @@ app.post('/urls', (req, res) => {
       longURL,
       userID: user
     };
-    res.redirect(302, `/urls/${shortURL}`);
+    return res.redirect(302, `/urls/${shortURL}`);
   }
 });
 
@@ -266,13 +267,21 @@ app.post('/register', (req, res) => {
 // Delete a stored shortURL (and associated longURL)
 app.post('/urls/:shortURL/delete', (req, res) => {
   const user = req.cookies.user_id;
+  const shortURL = req.params.shortURL;
   if (!user) {
     const templateVars = {
       user
     };
     return res.render('login_required', templateVars);
   }
-  const shortURL = req.params.shortURL;
+  const userURLs = Object.keys(urlsForUser(user.email));
+  if (!userURLs.includes(shortURL)) {
+    const templateVars = {
+      user
+    };
+    return res.render('unauthorized', templateVars);
+  }
+
   delete urlDatabase[shortURL];
   res.redirect('/urls')
 });
