@@ -95,7 +95,10 @@ app.get('/urls', (req, res) => {
   const user = users[req.cookies.user_id];
 
   if (!user) {
-    return res.status(401).send('You must be logged in to view this content. Please visit localhost:8080/login to login or localhost:8080/register to sign up!');
+    const templateVars = {
+      user: user
+    }
+    return res.render('login_required', templateVars);
   }
 
   const currentUserURLs = urlsForUser(user.id);
