@@ -118,6 +118,15 @@ app.get('/urls/:shortURL', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
+// render login page
+app.get('/login', (req, res) => {
+  const id = req.cookies.user_id;
+  const templateVars = {
+    user: users[id]
+  };
+  res.render('user_login', templateVars);
+});
+
 // Edit
 
 
