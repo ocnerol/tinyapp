@@ -167,7 +167,10 @@ app.post('/urls', (req, res) => {
     res.redirect(302, `/urls/${shortURL}`);
   } else {                                  // if we are storing a new shortURL
     shortURL = generateRandomString();
-    urlDatabase[shortURL] = req.body.longURL;
+    urlDatabase[shortURL] = {
+      longURL,
+      userID: user
+    };
     res.redirect(302, `/urls/${shortURL}`);
   }
 });
