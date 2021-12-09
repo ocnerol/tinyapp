@@ -84,7 +84,7 @@ app.get('/urls/new', (req, res) => {
   if (!user) {
     return res.redirect('/login');
   }
-  
+
   const templateVars = {
     user,
   }
@@ -139,6 +139,12 @@ app.get('/login', (req, res) => {
 
 // add new URL or updating existing shortURL with new longURL
 app.post('/urls', (req, res) => {
+  const user = req.cookies.user_id;
+
+  if (!user) {
+    return res.status(401).send('You must be logged in to shorten URLs.');
+  }
+
   const longURL = req.body.longURL;
   let shortURL = req.body.shortURL;
   if (shortURL) {                          // if we are updating destination of a shortURL
