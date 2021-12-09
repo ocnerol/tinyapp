@@ -191,12 +191,18 @@ app.post('/urls', (req, res) => {
       return 'http://www.' + url;
     }
   };
+
+  if (!user) {
+    const templateVars = {
+      user: user
+    }
+    return res.render('login_required', templateVars);
+  }
+
   const longURL = startsWithURLPrefix(req.body.longURL);
   let shortURL = req.body.shortURL;
 
-  if (!user) {
-    return res.status(401).send('You must be logged in to shorten URLs.');
-  }
+  
 
   const shortURLsOfUser = object.keys(urlsForUser(user.email));
   if (shortURL) {                             // if we are updating destination of a shortURL
