@@ -156,7 +156,17 @@ app.post('/urls', (req, res) => {
     return res.status(401).send('You must be logged in to shorten URLs.');
   }
 
-  const longURL = req.body.longURL;
+  const startsWithURLPrefix = (url) => {
+    if (url.startsWith('http://www.')) {
+      return url;
+    } else if (url.startsWith('www.')) {
+      return 'http://' + url;
+    } else {
+      return 'http://www.' + url;
+    }
+  }
+  const longURL = startsWithURLPrefix(req.body.longURL);
+
   let shortURL = req.body.shortURL;
   if (shortURL) {                          // if we are updating destination of a shortURL
     delete urlDatabase[shortURL];
@@ -221,7 +231,7 @@ app.get('/u/:shortURL', (req, res) => {
   if (!shortURL || !urlDatabase[shortURL]) {
     res.sendStatus(404);
   } else {
-    const longURL = urlDatabase[req.params.shortURL];
+    const longURL = urlDatabase[shortURL].longURL;
     res.redirect(longURL);
   }
 });
