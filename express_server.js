@@ -229,7 +229,7 @@ app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   console.log(req.params);
   if (!shortURL || !urlDatabase[shortURL]) {
-    res.sendStatus(404);
+    res.status(404).send('The given shortURL does not exist.');
   } else {
     const longURL = urlDatabase[shortURL].longURL;
     res.redirect(longURL);
