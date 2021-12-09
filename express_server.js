@@ -148,7 +148,10 @@ app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
 
   if (!user) {
-    return res.status(401).send(`You must be logged in to view this content. Please login at ${domain}login.`);
+    const templateVars = {
+      user
+    };
+    return res.render('login_required', templateVars);
   }
   const urlsObjectsForUser = urlsForUser(user.id);
   const urlsforUser = Object.keys(urlsObjectsForUser);
