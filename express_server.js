@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = 8080; // default port is 8080
 const bodyParser = require('body-parser');
+const domain = `localhost:${port}/`;
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
@@ -141,6 +142,10 @@ app.get('/register', (req, res) => {
 // render page for given shortURL on tinyApp
 app.get('/urls/:shortURL', (req, res) => {
   const user = users[req.cookies.user_id];
+
+  if (!user) {
+    return res.status(401).send(`You must be logged in to view this content. Please login at ${domain}login.`);
+  }
   const templateVars = {
     user,
     shortURL: req.params.shortURL,
