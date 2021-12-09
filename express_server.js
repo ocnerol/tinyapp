@@ -80,6 +80,10 @@ app.get('/', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const user = users[req.cookies.user_id];
+
+  if (!user) {
+    return res.send(401).send('You must be logged in to view this content');
+  }
   const templateVars = {
     urls: urlDatabase,
     user,
