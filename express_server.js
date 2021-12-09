@@ -182,11 +182,6 @@ app.get('/login', (req, res) => {
 // add new URL or updating existing shortURL with new longURL
 app.post('/urls', (req, res) => {
   const user = req.cookies.user_id;
-
-  if (!user) {
-    return res.status(401).send('You must be logged in to shorten URLs.');
-  }
-
   const startsWithURLPrefix = (url) => {
     if (url.startsWith('http://www.')) {
       return url;
@@ -195,17 +190,26 @@ app.post('/urls', (req, res) => {
     } else {
       return 'http://www.' + url;
     }
-  }
+  };
   const longURL = startsWithURLPrefix(req.body.longURL);
-
   let shortURL = req.body.shortURL;
-  if (shortURL) {                          // if we are updating destination of a shortURL
-    delete urlDatabase[shortURL];
-    urlDatabase[shortURL] = {
-      longURL,
-      userID: user
-    };
-    res.redirect(302, `/urls/${shortURL}`);
+
+  if (!user) {
+    return res.status(401).send('You must be logged in to shorten URLs.');
+  }
+
+  const shortURLsOfUser = object.keys(urlsForUser(user.email));
+  if (shortURL) {                             // if we are updating destination of a shortURL
+    if (shortURLsOfUser.includes(shortURL)) { // if the shortURL we are updating belongs to the current user
+      delete urlDatabase[shortURL];
+      urlDatabase[shortURL] = {
+        longURL,
+        userID: user
+      }
+      res.redirect(302, `/urls/${shortURL}`);
+    } else {
+      res.render('login_required');
+    }
   } else {                                  // if we are storing a new shortURL
     shortURL = generateRandomString();
     urlDatabase[shortURL] = {
