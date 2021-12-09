@@ -72,6 +72,18 @@ function findUserByEmail(email) {
   return null;
 };
 
+// returns URLs where the userID is equal to the given id (that of the currently logged-in user)
+function urlsForUser(id) {
+  const urls = {};
+  for (let shortURL in urlDatabase) {
+    if (urlDatabase[shortURL].userID === id) {
+      urls[shortURL] = urlDatabase[shortURL];
+    }
+  }
+  return urls;
+}
+
+
 // Browse
 
 app.get('/', (req, res) => {
@@ -82,10 +94,13 @@ app.get('/urls', (req, res) => {
   const user = users[req.cookies.user_id];
 
   if (!user) {
-    return res.send(401).send('You must be logged in to view this content');
+    return res.status(401).send('You must be logged in to view this content. Please visit localhost:8080/login to login or localhost:8080/register to sign up!');
   }
+
+  const currentUserURLs = urlsForUser(user.id);
+
   const templateVars = {
-    urls: urlDatabase,
+    urls: currentUserURLs,
     user,
   };
   res.render('urls_index', templateVars);
