@@ -199,8 +199,28 @@ app.get('/u/:shortURL', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  const username = req.body.username;
-  res.cookie('username', username);
+  const email = req.body.email;
+  const password = req.body.password;
+  
+  // if either email or passowrd are blank, return 401 status with error message
+  if (!email || !password) {
+    return res.status(401).send('Neither field can be blank. Please try logging in again.');
+  }
+
+  const user = findUserByEmail(email);
+  // if user is falsy, return 403 status with message that user with that email cannot be found
+  if (!user) {
+    return res.status(403).send('That email does not match a user in our records. Please try logging in again.');
+  }
+
+  // if password is NOT equal to existing user's password, return 403 error with message
+  if (password !== user.password) {
+    return res.status(403).send('The password you entered does not match our records. Please try logging in again.');
+  }
+
+  // otherwise, set user_id cookie with matching user's random ID
+  // then redirect to /urls
+  res.cookie('user_id', user.id);
   res.redirect('/urls');
 });
 
