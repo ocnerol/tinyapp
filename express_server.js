@@ -13,15 +13,26 @@ app.use(morgan('dev'));
 // 'Database'
 
 const urlDatabase = {
-  'b2xVn2': 'http://www.lighthouselabs.ca',
-  '9sm5xK': 'http://www.google.com'
+  'b2xVn2': {
+    longURL: 'http://www.lighthouselabs.ca',
+    userID: "1234"
+  },
+  '9sm5xK': {
+    longURL: 'http://www.google.com',
+    userID: "fBa9Jk"
+  }
 };
 
 const users = {
-  "user0RandomID": {
-    id: "user0RandomID",
+  "1234": {
+    id: "1234",
     email: "u@u.com",
     password: "abcd"
+  },
+  "fBa9Jk": {
+    id: "fBa9Jk",
+    email: "j@j.com",
+    password: "123abc"
   }
 };
 
