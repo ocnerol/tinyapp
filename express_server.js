@@ -80,6 +80,11 @@ app.get('/urls', (req, res) => {
 
 app.get('/urls/new', (req, res) => {
   const user = users[req.cookies.user_id];
+  console.log('user value when not signed in:', user);
+  if (!user) {
+    return res.redirect('/login');
+  }
+  
   const templateVars = {
     user,
   }
@@ -162,7 +167,7 @@ app.post('/register', (req, res) => {
     return res.status(400).send('A user with that email already exists. Please try logging in, or register with a different email address.');
   }
 
-  const newUserID = generateRandomString(); 
+  const newUserID = generateRandomString();
 
   users[newUserID] = {
     id: newUserID,
@@ -201,7 +206,7 @@ app.get('/u/:shortURL', (req, res) => {
 app.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  
+
   // if either email or passowrd are blank, return 401 status with error message
   if (!email || !password) {
     return res.status(401).send('Neither field can be blank. Please try logging in again.');
