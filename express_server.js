@@ -160,7 +160,10 @@ app.post('/urls', (req, res) => {
   let shortURL = req.body.shortURL;
   if (shortURL) {                          // if we are updating destination of a shortURL
     delete urlDatabase[shortURL];
-    urlDatabase[shortURL] = longURL;
+    urlDatabase[shortURL] = {
+      longURL,
+      userID: user
+    };
     res.redirect(302, `/urls/${shortURL}`);
   } else {                                  // if we are storing a new shortURL
     shortURL = generateRandomString();
