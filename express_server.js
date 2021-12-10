@@ -146,9 +146,9 @@ app.get('/urls/:shortURL', (req, res) => {
   }
 
   const urlsObjectsForUser = urlsForUser(user.id, urlDatabase);
-  const urlsforUser = Object.keys(urlsObjectsForUser);
+  const currentUserURLs = Object.keys(urlsObjectsForUser);
 
-  if (!urlsforUser.includes(shortURL)) {
+  if (!currentUserURLs.includes(shortURL)) {
     const templateVars = {
       user
     };
