@@ -232,13 +232,13 @@ app.post('/urls/:shortURL', (req, res) => {
     const templateVars = {
       user
     };
-    return res.render('login_required', templateVars)
+    return res.render('unauthorized', templateVars)
   } else {
     urlDatabase[shortURL] = {
       longURL,
       userID: user.id
     }
-    return res.redirect(302, `/urls/${shortURL}`);
+    return res.redirect(302, `/urls`);
   }
 });
 
