@@ -345,7 +345,7 @@ app.post('/login', (req, res) => {
 
   // otherwise, set user_id cookie with matching user's random ID
   // then redirect to /urls
-  res.cookie('user_id', user.id);
+  req.session.user_id = user.id;
   res.redirect('/urls');
 });
 
