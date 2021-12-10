@@ -155,10 +155,14 @@ app.get('/hello', (req, res) => {
 // render registration page
 app.get('/register', (req, res) => {
   const user = users[req.session.user_id];
-  const templateVars = {
-    user,
-  };
-  res.render('urls_register', templateVars);
+  if (!user) {
+    const templateVars = {
+      user,
+    };
+    res.render('urls_register', templateVars);
+  } else {
+    return res.redirect('/urls');
+  }
 });
 
 // render page for given shortURL on tinyApp
