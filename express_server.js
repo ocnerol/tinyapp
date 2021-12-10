@@ -208,7 +208,7 @@ app.post('urls/:shortURL', (req, res) => {
   const shortURLsOfUser = Object.keys(urlsForUser(user.id));
 
   // if the shortURL being updated does not belong to the current user
-  if (!shortURLsOfUser.includes(shortURL)) { 
+  if (!shortURLsOfUser.includes(shortURL)) {
     const templateVars = {
       user
     };
@@ -225,10 +225,9 @@ app.post('urls/:shortURL', (req, res) => {
 
 // Add
 
-// add new URL or updating existing shortURL with new longURL
+// add new URL
 app.post('/urls', (req, res) => {
   const user = users[req.cookies.user_id];
-
 
   if (!user) {
     const templateVars = {
@@ -238,31 +237,13 @@ app.post('/urls', (req, res) => {
   }
 
   const longURL = startsWithURLPrefix(req.body.longURL);
-  let shortURL = req.body.shortURL;
+  const shortURL = generateRandomString();
 
-  const shortURLsOfUser = Object.keys(urlsForUser(user.id));
-  if (shortURL) {                             // if we are updating destination of a shortURL
-    if (shortURLsOfUser.includes(shortURL)) { // if the shortURL we are updating belongs to the current user
-      delete urlDatabase[shortURL];
-      urlDatabase[shortURL] = {
-        longURL,
-        userID: user.id
-      }
-      return res.redirect(302, `/urls/${shortURL}`);
-    } else {
-      const templateVars = {
-        user
-      };
-      return res.render('login_required', templateVars);
-    }
-  } else {                                  // if we are storing a new shortURL
-    shortURL = generateRandomString();
-    urlDatabase[shortURL] = {
-      longURL,
-      userID: user
-    };
-    return res.redirect(302, `/urls/${shortURL}`);
-  }
+  urlDatabase[shortURL] = {
+    longURL,
+    userID: user.id
+  };
+  return res.redirect(302, `/urls/${shortURL}`);
 });
 
 // submit new user registration and redirect to /urls
