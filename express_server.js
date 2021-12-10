@@ -26,16 +26,19 @@ const urlDatabase = {
   }
 };
 
+const user1234Password = bcrypt.hashSync("abcd", 10);
+const userfba9JkPassword = bcrypt.hashSync("123abc", 10);
+
 const users = {
   "1234": {
     id: "1234",
     email: "u@u.com",
-    password: "abcd"
+    password: user1234Password
   },
   "fBa9Jk": {
     id: "fBa9Jk",
     email: "j@j.com",
-    password: "123abc"
+    password: userfba9JkPassword
   }
 };
 
@@ -242,7 +245,6 @@ app.post('/urls', (req, res) => {
     longURL,
     userID: user.id
   };
-  console.log('new shortURL object taken from urlDatabase:', urlDatabase[shortURL])
   return res.redirect(302, `/urls/${shortURL}`);
 });
 
