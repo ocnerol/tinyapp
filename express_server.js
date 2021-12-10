@@ -133,7 +133,6 @@ app.get('/urls', (req, res) => {
 
 app.get('/urls/new', (req, res) => {
   const user = users[req.session.user_id];
-  console.log('user value when not signed in:', user);
   if (!user) {
     return res.redirect('/login');
   }
@@ -305,7 +304,6 @@ app.post('/register', (req, res) => {
   }
 
   req.session.user_id = newUserID;
-  console.log('users database object now:', users);
   res.redirect('/urls');
 });
 
@@ -317,7 +315,6 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   const user = users[req.session.user_id];
   const shortURL = req.params.shortURL;
 
-  console.log('value of shortURL in route paramater:', shortURL)
   if (!user) {
     const templateVars = {
       user
@@ -325,7 +322,6 @@ app.post('/urls/:shortURL/delete', (req, res) => {
     return res.render('login_required', templateVars);
   }
   const userURLs = Object.keys(urlsForUser(user.id));
-  console.log('the current user\'s URLs', userURLs);
   if (!userURLs.includes(shortURL)) {
     const templateVars = {
       user
@@ -381,7 +377,6 @@ app.post('/login', (req, res) => {
   // otherwise, set user_id cookie with matching user's random ID
   // then redirect to /urls
   req.session.user_id = user.id;
-  console.log(req.session.user_id);
   res.redirect('/urls');
 });
 
