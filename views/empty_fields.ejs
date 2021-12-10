@@ -17,7 +17,12 @@
 
   <main style="margin: 1em;">
     <h3>Invalid entries</h3>
-    <p>Neither email or password field can be left blank. Please signing up again.</p>
+    <p>Neither email or password field can be left blank. Please try again.</p>
+    <form class="form-inline" action="/login" method="GET">
+      <div class="form-group mb-2">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+    </form> 
     <form class="form-inline" action="/register" method="GET">
       <div class="form-group mb-2">
         <button type="submit" class="btn btn-primary">Sign up</button>
