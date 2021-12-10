@@ -112,7 +112,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
 
   if (!user) {
     const templateVars = {
@@ -133,7 +133,7 @@ app.get('/urls', (req, res) => {
 // Read
 
 app.get('/urls/new', (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
   console.log('user value when not signed in:', user);
   if (!user) {
     return res.redirect('/login');
@@ -155,7 +155,7 @@ app.get('/hello', (req, res) => {
 
 // render registration page
 app.get('/register', (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
   const templateVars = {
     user,
   };
@@ -164,7 +164,7 @@ app.get('/register', (req, res) => {
 
 // render page for given shortURL on tinyApp
 app.get('/urls/:shortURL', (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
   const shortURL = req.params.shortURL;
 
   if (!user) {
@@ -193,7 +193,7 @@ app.get('/urls/:shortURL', (req, res) => {
 
 // render login page
 app.get('/login', (req, res) => {
-  const id = req.cookies.user_id;
+  const id = req.session.user_id;
   const templateVars = {
     user: users[id]
   };
@@ -203,7 +203,7 @@ app.get('/login', (req, res) => {
 // Edit
 // updating a shortURL
 app.post('/urls/:shortURL', (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
 
   if (!user) {
     const templateVars = {
@@ -235,7 +235,7 @@ app.post('/urls/:shortURL', (req, res) => {
 
 // add new URL
 app.post('/urls', (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
 
   if (!user) {
     const templateVars = {
@@ -277,7 +277,7 @@ app.post('/register', (req, res) => {
     password: bcrypt.hashSync(password, salt)
   }
 
-  res.cookie('user_id', newUserID);
+  req.session.user_id = newUserID;
   console.log('users database object now:', users);
   res.redirect('/urls');
 });
@@ -287,7 +287,7 @@ app.post('/register', (req, res) => {
 
 // Delete a stored shortURL (and associated longURL)
 app.post('/urls/:shortURL/delete', (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
   const shortURL = req.params.shortURL;
 
   console.log('value of shortURL in route paramater:', shortURL)
@@ -346,15 +346,15 @@ app.post('/login', (req, res) => {
   // otherwise, set user_id cookie with matching user's random ID
   // then redirect to /urls
   req.session.user_id = user.id;
+  console.log(req.session.user_id);
   res.redirect('/urls');
 });
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('user_id');
+  req.session = null;
   res.redirect('/urls');
 });
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-
