@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
+const session = require('cookie-session');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
