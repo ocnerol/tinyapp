@@ -61,7 +61,7 @@ const generateRandomString = function() {
   const resultMaxLength = 6;
   let result = "";
   let addNumber = true;
-  for (let i = 0; i < resultMaxLength; i++) {
+  for (const i = 0; i < resultMaxLength; i++) {
     if (addNumber) {
       const newNumber = Math.floor(Math.random() * 10); // random number (integer) from 0 to 9
       result += newNumber;
@@ -80,7 +80,7 @@ const generateRandomString = function() {
 // returns URLs where the userID is equal to the given id (that of the currently logged-in user)
 const urlsForUser = function(id) {
   const urls = {};
-  for (let shortURL in urlDatabase) {
+  for (const shortURL in urlDatabase) {
     if (urlDatabase[shortURL].userID === id) {
       urls[shortURL] = urlDatabase[shortURL];
     }
