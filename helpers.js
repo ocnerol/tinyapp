@@ -33,7 +33,18 @@ const generateRandomString = function() {
   return result;
 };
 
+const urlsForUser = function(id, database) {
+  const urls = {};
+  for (const shortURL in database) {
+    if (database[shortURL].userID === id) {
+      urls[shortURL] = database[shortURL];
+    }
+  }
+  return urls;
+};
+
 module.exports = { 
   findUserByEmail,
-  generateRandomString
+  generateRandomString,
+  urlsForUser
 }

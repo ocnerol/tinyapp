@@ -7,7 +7,7 @@ const morgan = require('morgan');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const cookieSession = require('cookie-session');
-const { findUserByEmail, generateRandomString } = require('./helpers');
+const { findUserByEmail, generateRandomString, urlsForUser } = require('./helpers');
 
 
 app.use(cookieSession({
@@ -49,18 +49,6 @@ const users = {
   }
 };
 
-// Functions
-
-// returns URLs where the userID is equal to the given id (that of the currently logged-in user)
-const urlsForUser = function(id) {
-  const urls = {};
-  for (const shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === id) {
-      urls[shortURL] = urlDatabase[shortURL];
-    }
-  }
-  return urls;
-};
 
 const startsWithURLPrefix = (url) => {
   if (url.startsWith('http://www.')) {
@@ -93,7 +81,7 @@ app.get('/urls', (req, res) => {
     return res.render('login_required', templateVars);
   }
 
-  const currentUserURLs = urlsForUser(user.id);
+  const currentUserURLs = urlsForUser(user.id, urlDatabase);
 
   const templateVars = {
     urls: currentUserURLs,
@@ -157,7 +145,7 @@ app.get('/urls/:shortURL', (req, res) => {
     return res.render('non_existent', templateVars);
   }
 
-  const urlsObjectsForUser = urlsForUser(user.id);
+  const urlsObjectsForUser = urlsForUser(user.id, urlDatabase);
   const urlsforUser = Object.keys(urlsObjectsForUser);
 
   if (!urlsforUser.includes(shortURL)) {
@@ -205,7 +193,7 @@ app.post('/urls/:shortURL', (req, res) => {
 
   const longURL = startsWithURLPrefix(req.body.longURL);
   const shortURL = req.body.shortURL;
-  const shortURLsOfUser = Object.keys(urlsForUser(user.id));
+  const shortURLsOfUser = Object.keys(urlsForUser(user.id, urlDatabase));
 
   // if the shortURL being updated does not belong to the current user
   if (!shortURLsOfUser.includes(shortURL)) {
@@ -294,7 +282,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
     };
     return res.render('login_required', templateVars);
   }
-  const userURLs = Object.keys(urlsForUser(user.id));
+  const userURLs = Object.keys(urlsForUser(user.id, urlDatabase));
   if (!userURLs.includes(shortURL)) {
     const templateVars = {
       user
