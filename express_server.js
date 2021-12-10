@@ -7,15 +7,17 @@ const morgan = require('morgan');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const cookieSession = require('cookie-session');
-const { findUserByEmail, generateRandomString, urlsForUser } = require('./helpers');
+const { findUserByEmail,
+  generateRandomString,
+  urlsForUser,
+  ensureWithScheme
+} = require('./helpers');
 
-
+app.set('view engine', 'ejs');
 app.use(cookieSession({
   name: 'session',
   keys: ["polopinkglassSANDtwentyfour"]
 }));
-
-app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan('dev'));
@@ -50,15 +52,7 @@ const users = {
 };
 
 
-const startsWithURLPrefix = (url) => {
-  if (url.startsWith('http://www.')) {
-    return url;
-  } else if (url.startsWith('www.')) {
-    return 'http://' + url;
-  } else {
-    return 'http://www.' + url;
-  }
-};
+
 
 // Browse
 
@@ -191,7 +185,7 @@ app.post('/urls/:shortURL', (req, res) => {
     return res.render('login_required', templateVars);
   }
 
-  const longURL = startsWithURLPrefix(req.body.longURL);
+  const longURL = ensureWithScheme(req.body.longURL);
   const shortURL = req.body.shortURL;
   const shortURLsOfUser = Object.keys(urlsForUser(user.id, urlDatabase));
 
@@ -223,7 +217,7 @@ app.post('/urls', (req, res) => {
     return res.render('login_required', templateVars);
   }
 
-  const longURL = startsWithURLPrefix(req.body.longURL);
+  const longURL = ensureWithScheme(req.body.longURL);
   const shortURL = generateRandomString();
 
   urlDatabase[shortURL] = {

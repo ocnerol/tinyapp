@@ -43,8 +43,19 @@ const urlsForUser = function(id, database) {
   return urls;
 };
 
+const ensureWithScheme = (url) => {
+  if (url.startsWith('http://www.')) {
+    return url;
+  } else if (url.startsWith('www.')) {
+    return 'http://' + url;
+  } else {
+    return 'http://www.' + url;
+  }
+};
+
 module.exports = { 
   findUserByEmail,
   generateRandomString,
-  urlsForUser
+  urlsForUser,
+  ensureWithScheme
 }
