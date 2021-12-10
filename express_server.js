@@ -185,7 +185,10 @@ app.get('/urls/:shortURL', (req, res) => {
   const urlsforUser = Object.keys(urlsObjectsForUser);
 
   if (!urlsforUser.includes(shortURL)) {
-    return res.status(403).send('You are not authorized to view this content.');
+    const templateVars = {
+      user
+    };
+    return res.render('unauthorized', templateVars);
   }
 
   const templateVars = {
