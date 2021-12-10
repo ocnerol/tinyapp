@@ -275,17 +275,25 @@ app.post('/urls', (req, res) => {
 
 // submit new user registration and redirect to /urls
 app.post('/register', (req, res) => {
+  const user = users[req.session.user_id];
   const email = req.body.email;
   const password = req.body.password;
 
   if (!email || !password) {
-    return res.status(400).send('You cannot leave either of the fields blank. Please try to register again.')
+    // return view that neither field can be blank
+    const templateVars = {
+      user
+    };
+    return res.render('empty_fields', templateVars);
   }
 
-  const user = findUserByEmail(email, users);
+  const emailAlreadyExists = findUserByEmail(email, users);
 
-  if (user) {
-    return res.status(400).send('A user with that email already exists. Please try logging in, or register with a different email address.');
+  if (emailAlreadyExists) {
+    const templateVars = {
+      user
+    };
+    return res.render('email_exists', templateVars);
   }
 
   const newUserID = generateRandomString();
