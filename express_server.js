@@ -8,6 +8,8 @@ const morgan = require('morgan');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const cookieSession = require('cookie-session');
+const { findUserByEmail } = require('./helpers');
+
 
 app.use(cookieSession({
   name: 'session',
@@ -74,15 +76,7 @@ function generateRandomString() {
   return result;
 }
 
-function findUserByEmail(email, database) {
-  for (const userID in database) {
-    const user = database[userID];
-    if (user.email === email) {
-      return user;
-    }
-  }
-  return null;
-};
+
 
 // returns URLs where the userID is equal to the given id (that of the currently logged-in user)
 function urlsForUser(id) {
