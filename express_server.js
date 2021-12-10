@@ -356,13 +356,18 @@ app.post('/login', (req, res) => {
   const user = findUserByEmail(email, users);
   // if user is falsy, return 403 status with message that user with that email cannot be found
   if (!user) {
-    return res.status(403).send('That email does not match a user in our records. Please try logging in again.');
+    const templateVars = {
+      user
+    };
+    return res.render('invalid_login', templateVars);
   }
-
   // if password is NOT equal to existing user's password, return 403 error with message
   const passwordsMatching = bcrypt.compareSync(password, user.password);
   if (!passwordsMatching) {
-    return res.status(403).send('The password you entered does not match our records. Please try logging in again.');
+    const templateVars = {
+      user
+    };
+    return res.render('invalid_login', templateVars);
   }
 
   // otherwise, set user_id cookie with matching user's random ID
