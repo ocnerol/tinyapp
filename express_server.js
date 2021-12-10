@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const port = 8080; // default port is 8080
 const bodyParser = require('body-parser');
-const domain = `localhost:${port}/`;
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const bcrypt = require('bcryptjs');
@@ -52,7 +51,7 @@ const users = {
 
 // Functions
 
-function generateRandomString() {
+const generateRandomString = function() {
   const letters = [
     'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h',
     'I', 'i', 'J', 'j', 'K', 'k', 'L', 'l', 'M', 'm', 'N', 'n', 'O', 'o', 'P', 'p',
@@ -74,12 +73,12 @@ function generateRandomString() {
     addNumber = !addNumber;
   }
   return result;
-}
+};
 
 
 
 // returns URLs where the userID is equal to the given id (that of the currently logged-in user)
-function urlsForUser(id) {
+const urlsForUser = function(id) {
   const urls = {};
   for (let shortURL in urlDatabase) {
     if (urlDatabase[shortURL].userID === id) {
@@ -87,7 +86,7 @@ function urlsForUser(id) {
     }
   }
   return urls;
-}
+};
 
 const startsWithURLPrefix = (url) => {
   if (url.startsWith('http://www.')) {
@@ -106,7 +105,7 @@ app.get('/', (req, res) => {
   if (!user) {
     return res.redirect('/login');
   } else {
-    return res.redirect('/urls')
+    return res.redirect('/urls');
   }
 });
 
@@ -116,7 +115,7 @@ app.get('/urls', (req, res) => {
   if (!user) {
     const templateVars = {
       user: user
-    }
+    };
     return res.render('login_required', templateVars);
   }
 
@@ -139,7 +138,7 @@ app.get('/urls/new', (req, res) => {
 
   const templateVars = {
     user,
-  }
+  };
   res.render('urls_new', templateVars);
 });
 
@@ -226,7 +225,7 @@ app.post('/urls/:shortURL', (req, res) => {
   if (!user) {
     const templateVars = {
       user: user
-    }
+    };
     return res.render('login_required', templateVars);
   }
 
@@ -239,12 +238,12 @@ app.post('/urls/:shortURL', (req, res) => {
     const templateVars = {
       user
     };
-    return res.render('unauthorized', templateVars)
+    return res.render('unauthorized', templateVars);
   } else {
     urlDatabase[shortURL] = {
       longURL,
       userID: user.id
-    }
+    };
     return res.redirect(302, `/urls`);
   }
 });
@@ -258,7 +257,7 @@ app.post('/urls', (req, res) => {
   if (!user) {
     const templateVars = {
       user: user
-    }
+    };
     return res.render('login_required', templateVars);
   }
 
@@ -301,7 +300,7 @@ app.post('/register', (req, res) => {
     id: newUserID,
     email: email,
     password: bcrypt.hashSync(password, salt)
-  }
+  };
 
   req.session.user_id = newUserID;
   res.redirect('/urls');
@@ -330,7 +329,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   }
 
   delete urlDatabase[shortURL];
-  res.redirect('/urls')
+  res.redirect('/urls');
 });
 
 
