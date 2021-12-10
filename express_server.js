@@ -194,7 +194,33 @@ app.get('/login', (req, res) => {
 // Edit
 // updating a shortURL
 app.post('urls/:shortURL', (req, res) => {
+  const user = users[req.cookies.user_id];
 
+  if (!user) {
+    const templateVars = {
+      user: user
+    }
+    return res.render('login_required', templateVars);
+  }
+
+  const longURL = startsWithURLPrefix(req.body.longURL);
+  const shortURL = req.body.shortURL;
+  const shortURLsOfUser = Object.keys(urlsForUser(user.id));
+
+  // if the shortURL being updated does not belong to the current user
+  if (!shortURLsOfUser.includes(shortURL)) { 
+    const templateVars = {
+      user
+    };
+    return res.render('login_required', templateVars)
+  } else {
+    delete urlDatabase[shortURL];
+    urlDatabase[shortURL] = {
+      longURL,
+      userID: user.id
+    }
+    return res.redirect(302, `/urls/${shortURL}`);
+  }
 });
 
 // Add
