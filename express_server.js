@@ -86,6 +86,15 @@ function urlsForUser(id) {
   return urls;
 }
 
+const startsWithURLPrefix = (url) => {
+  if (url.startsWith('http://www.')) {
+    return url;
+  } else if (url.startsWith('www.')) {
+    return 'http://' + url;
+  } else {
+    return 'http://www.' + url;
+  }
+};
 
 // Browse
 
@@ -183,22 +192,17 @@ app.get('/login', (req, res) => {
 });
 
 // Edit
+// updating a shortURL
+app.post('urls/:shortURL', (req, res) => {
 
+});
 
 // Add
 
 // add new URL or updating existing shortURL with new longURL
 app.post('/urls', (req, res) => {
   const user = users[req.cookies.user_id];
-  const startsWithURLPrefix = (url) => {
-    if (url.startsWith('http://www.')) {
-      return url;
-    } else if (url.startsWith('www.')) {
-      return 'http://' + url;
-    } else {
-      return 'http://www.' + url;
-    }
-  };
+
 
   if (!user) {
     const templateVars = {
