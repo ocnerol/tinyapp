@@ -242,6 +242,7 @@ app.post('/urls', (req, res) => {
     longURL,
     userID: user.id
   };
+  console.log('new shortURL object taken from urlDatabase:', urlDatabase[shortURL])
   return res.redirect(302, `/urls/${shortURL}`);
 });
 
@@ -278,15 +279,18 @@ app.post('/register', (req, res) => {
 
 // Delete a stored shortURL (and associated longURL)
 app.post('/urls/:shortURL/delete', (req, res) => {
-  const user = req.cookies.user_id;
+  const user = users[req.cookies.user_id];
   const shortURL = req.params.shortURL;
+
+  console.log('value of shortURL in route paramater:', shortURL)
   if (!user) {
     const templateVars = {
       user
     };
     return res.render('login_required', templateVars);
   }
-  const userURLs = Object.keys(urlsForUser(user.email));
+  const userURLs = Object.keys(urlsForUser(user.id));
+  console.log('the current user\'s URLs', userURLs);
   if (!userURLs.includes(shortURL)) {
     const templateVars = {
       user
