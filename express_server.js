@@ -101,7 +101,7 @@ const startsWithURLPrefix = (url) => {
 // Browse
 
 app.get('/', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
   if (!user) {
     return res.redirect('/login');
   } else {
@@ -110,7 +110,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
 
   if (!user) {
     const templateVars = {
@@ -131,7 +131,7 @@ app.get('/urls', (req, res) => {
 // Read
 
 app.get('/urls/new', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
   if (!user) {
     return res.redirect('/login');
   }
@@ -152,7 +152,7 @@ app.get('/hello', (req, res) => {
 
 // render registration page
 app.get('/register', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
   if (!user) {
     const templateVars = {
       user,
@@ -165,7 +165,7 @@ app.get('/register', (req, res) => {
 
 // render page for given shortURL on tinyApp
 app.get('/urls/:shortURL', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
   const shortURL = req.params.shortURL;
 
   if (!user) {
@@ -206,7 +206,7 @@ app.get('/urls/:shortURL', (req, res) => {
 
 // render login page
 app.get('/login', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
   if (!user) {
     const templateVars = {
       user
@@ -220,7 +220,7 @@ app.get('/login', (req, res) => {
 // Edit
 // updating a shortURL
 app.post('/urls/:shortURL', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
 
   if (!user) {
     const templateVars = {
@@ -252,7 +252,7 @@ app.post('/urls/:shortURL', (req, res) => {
 
 // add new URL
 app.post('/urls', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
 
   if (!user) {
     const templateVars = {
@@ -273,7 +273,7 @@ app.post('/urls', (req, res) => {
 
 // submit new user registration and redirect to /urls
 app.post('/register', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
   const email = req.body.email;
   const password = req.body.password;
 
@@ -302,7 +302,7 @@ app.post('/register', (req, res) => {
     password: bcrypt.hashSync(password, salt)
   };
 
-  req.session.user_id = newUserID;
+  req.session.userID = newUserID;
   res.redirect('/urls');
 });
 
@@ -311,7 +311,7 @@ app.post('/register', (req, res) => {
 
 // Delete a stored shortURL (and associated longURL)
 app.post('/urls/:shortURL/delete', (req, res) => {
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
   const shortURL = req.params.shortURL;
 
   if (!user) {
@@ -335,7 +335,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
-  const user = users[req.session.user_id];
+  const user = users[req.session.userID];
   if (!shortURL || !urlDatabase[shortURL]) {
     const templateVars = {
       user
@@ -373,9 +373,9 @@ app.post('/login', (req, res) => {
     return res.render('invalid_login', templateVars);
   }
 
-  // otherwise, set user_id cookie with matching user's random ID
+  // otherwise, set userID cookie with matching user's random ID
   // then redirect to /urls
-  req.session.user_id = user.id;
+  req.session.userID = user.id;
   res.redirect('/urls');
 });
 
