@@ -172,6 +172,15 @@ app.get('/urls/:shortURL', (req, res) => {
     };
     return res.render('login_required', templateVars);
   }
+
+  const allShortURLs = Object.keys(urlDatabase);
+  if (!allShortURLs.includes(shortURL)) {
+    const templateVars = {
+      user
+    };
+    return res.render('non_existent', templateVars);
+  }
+
   const urlsObjectsForUser = urlsForUser(user.id);
   const urlsforUser = Object.keys(urlsObjectsForUser);
 
