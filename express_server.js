@@ -193,7 +193,7 @@ app.get('/login', (req, res) => {
 
 // Edit
 // updating a shortURL
-app.post('urls/:shortURL', (req, res) => {
+app.post('/urls/:shortURL', (req, res) => {
   const user = users[req.cookies.user_id];
 
   if (!user) {
@@ -214,7 +214,6 @@ app.post('urls/:shortURL', (req, res) => {
     };
     return res.render('login_required', templateVars)
   } else {
-    delete urlDatabase[shortURL];
     urlDatabase[shortURL] = {
       longURL,
       userID: user.id
