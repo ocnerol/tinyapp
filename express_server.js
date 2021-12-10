@@ -316,7 +316,8 @@ app.post('/login', (req, res) => {
   }
 
   // if password is NOT equal to existing user's password, return 403 error with message
-  if (password !== user.password) {
+  const passwordsMatching = bcrypt.compareSync(password, user.password);
+  if (!passwordsMatching) {
     return res.status(403).send('The password you entered does not match our records. Please try logging in again.');
   }
 
