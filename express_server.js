@@ -74,9 +74,9 @@ function generateRandomString() {
   return result;
 }
 
-function findUserByEmail(email) {
-  for (const userID in users) {
-    const user = users[userID];
+function findUserByEmail(email, database) {
+  for (const userID in database) {
+    const user = database[userID];
     if (user.email === email) {
       return user;
     }
@@ -263,7 +263,7 @@ app.post('/register', (req, res) => {
     return res.status(400).send('You cannot leave either of the fields blank. Please try to register again.')
   }
 
-  const user = findUserByEmail(email);
+  const user = findUserByEmail(email, users);
 
   if (user) {
     return res.status(400).send('A user with that email already exists. Please try logging in, or register with a different email address.');
@@ -331,7 +331,7 @@ app.post('/login', (req, res) => {
     return res.status(401).send('Neither field can be blank. Please try logging in again.');
   }
 
-  const user = findUserByEmail(email);
+  const user = findUserByEmail(email, users);
   // if user is falsy, return 403 status with message that user with that email cannot be found
   if (!user) {
     return res.status(403).send('That email does not match a user in our records. Please try logging in again.');
