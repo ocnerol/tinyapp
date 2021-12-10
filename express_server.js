@@ -51,10 +51,13 @@ const users = {
   }
 };
 
+//
+// ----------- Endpoints -----------
+//
 
-
-
-// Browse
+//
+// ----------- Browse --------------
+//
 
 app.get('/', (req, res) => {
   const user = users[req.session.userID];
@@ -67,7 +70,6 @@ app.get('/', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const user = users[req.session.userID];
-
   if (!user) {
     const templateVars = {
       user: user
@@ -76,15 +78,18 @@ app.get('/urls', (req, res) => {
   }
 
   const currentUserURLs = urlsForUser(user.id, urlDatabase);
-
   const templateVars = {
     urls: currentUserURLs,
     user,
   };
   res.render('urls_index', templateVars);
+
 });
 
-// Read
+
+//
+// ----------- Read ----------------
+//
 
 app.get('/urls/new', (req, res) => {
   const user = users[req.session.userID];
@@ -98,15 +103,6 @@ app.get('/urls/new', (req, res) => {
   res.render('urls_new', templateVars);
 });
 
-app.get('/urls.json', (req, res) => {
-  res.json(urlDatabase);
-});
-
-app.get('/hello', (req, res) => {
-  res.send('<html><body>Hello <b>World</b></body></html>\n');
-});
-
-// render registration page
 app.get('/register', (req, res) => {
   const user = users[req.session.userID];
   if (!user) {
@@ -121,6 +117,7 @@ app.get('/register', (req, res) => {
 
 // render page for given shortURL on tinyApp
 app.get('/urls/:shortURL', (req, res) => {
+
   const user = users[req.session.userID];
   const shortURL = req.params.shortURL;
 
@@ -131,8 +128,7 @@ app.get('/urls/:shortURL', (req, res) => {
     return res.render('login_required', templateVars);
   }
 
-  const allShortURLs = Object.keys(urlDatabase);
-  if (!allShortURLs.includes(shortURL)) {
+  if (!urlDatabase[shortURL]) {
     const templateVars = {
       user
     };
@@ -154,13 +150,11 @@ app.get('/urls/:shortURL', (req, res) => {
     shortURL: shortURL,
     shortURLInfo: urlDatabase[req.params.shortURL],
   };
-  if (!shortURL || !urlDatabase[shortURL]) {
-    res.sendStatus(404);
-  }
+
   res.render('urls_show', templateVars);
+
 });
 
-// render login page
 app.get('/login', (req, res) => {
   const user = users[req.session.userID];
   if (!user) {
@@ -173,7 +167,26 @@ app.get('/login', (req, res) => {
   }
 });
 
-// Edit
+// redirect to longURL address of given shortURL, if valid
+app.get('/u/:shortURL', (req, res) => {
+  const shortURL = req.params.shortURL;
+  const user = users[req.session.userID];
+
+  if (!shortURL || !urlDatabase[shortURL]) {
+    const templateVars = {
+      user
+    };
+    return res.render('non_existent', templateVars);
+  } else {
+    const longURL = urlDatabase[shortURL].longURL;
+    res.redirect(longURL);
+  }
+});
+
+//
+// ----------- Edit ----------------
+//
+
 // updating a shortURL
 app.post('/urls/:shortURL', (req, res) => {
   const user = users[req.session.userID];
@@ -200,11 +213,14 @@ app.post('/urls/:shortURL', (req, res) => {
       longURL,
       userID: user.id
     };
-    return res.redirect(302, `/urls`);
+    return res.redirect(302, '/urls');
   }
 });
 
-// Add
+
+//
+// ----------- Add -----------------
+//
 
 // add new URL
 app.post('/urls', (req, res) => {
@@ -227,14 +243,13 @@ app.post('/urls', (req, res) => {
   return res.redirect(302, `/urls/${shortURL}`);
 });
 
-// submit new user registration and redirect to /urls
+// submit new user registration
 app.post('/register', (req, res) => {
   const user = users[req.session.userID];
   const email = req.body.email;
   const password = req.body.password;
 
   if (!email || !password) {
-    // return view that neither field can be blank
     const templateVars = {
       user
     };
@@ -262,8 +277,43 @@ app.post('/register', (req, res) => {
   res.redirect('/urls');
 });
 
+app.post('/login', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
 
-// Delete
+  if (!email || !password) {
+    const user = users[req.session.userID];
+    const templateVars = {
+      user
+    };
+    return res.render('empty_fields', templateVars);
+  }
+
+  const user = findUserByEmail(email, users);
+
+  // render invalid login error message when given email is non-existent
+  if (!user) {
+    const templateVars = {
+      user
+    };
+    return res.render('invalid_login', templateVars);
+  }
+
+  const passwordsMatching = bcrypt.compareSync(password, user.password);
+  if (!passwordsMatching) {
+    const templateVars = {
+      user
+    };
+    return res.render('invalid_login', templateVars);
+  }
+
+  req.session.userID = user.id;
+  res.redirect('/urls');
+});
+
+//
+// ----------- Delete --------------
+//
 
 // Delete a stored shortURL (and associated longURL)
 app.post('/urls/:shortURL/delete', (req, res) => {
@@ -276,7 +326,9 @@ app.post('/urls/:shortURL/delete', (req, res) => {
     };
     return res.render('login_required', templateVars);
   }
+
   const userURLs = Object.keys(urlsForUser(user.id, urlDatabase));
+
   if (!userURLs.includes(shortURL)) {
     const templateVars = {
       user
@@ -288,58 +340,15 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect('/urls');
 });
 
-
-app.get('/u/:shortURL', (req, res) => {
-  const shortURL = req.params.shortURL;
-  const user = users[req.session.userID];
-  if (!shortURL || !urlDatabase[shortURL]) {
-    const templateVars = {
-      user
-    };
-    return res.render('non_existent', templateVars);
-  } else {
-    const longURL = urlDatabase[shortURL].longURL;
-    res.redirect(longURL);
-  }
-});
-
-app.post('/login', (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-
-  // if either email or passowrd are blank, return 401 status with error message
-  if (!email || !password) {
-    return res.status(401).send('Neither field can be blank. Please try logging in again.');
-  }
-
-  const user = findUserByEmail(email, users);
-  // if user is falsy, return 403 status with message that user with that email cannot be found
-  if (!user) {
-    const templateVars = {
-      user
-    };
-    return res.render('invalid_login', templateVars);
-  }
-  // if password is NOT equal to existing user's password, return 403 error with message
-  const passwordsMatching = bcrypt.compareSync(password, user.password);
-  if (!passwordsMatching) {
-    const templateVars = {
-      user
-    };
-    return res.render('invalid_login', templateVars);
-  }
-
-  // otherwise, set userID cookie with matching user's random ID
-  // then redirect to /urls
-  req.session.userID = user.id;
-  res.redirect('/urls');
-});
-
 app.post('/logout', (req, res) => {
   req.session = null;
   res.redirect('/urls');
 });
 
+
+//
+// -------- Server-specific --------
+//
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
