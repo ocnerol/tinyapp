@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const domain = `localhost:${port}/`;
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const bcrypt = require('bcryptjs');
+const salt = bcrypt.genSaltSync(10);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -253,7 +255,7 @@ app.post('/register', (req, res) => {
   users[newUserID] = {
     id: newUserID,
     email: email,
-    password: password
+    password: bcrypt.hashSync(password, salt)
   }
 
   res.cookie('user_id', newUserID);
