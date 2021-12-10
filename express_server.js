@@ -204,11 +204,15 @@ app.get('/urls/:shortURL', (req, res) => {
 
 // render login page
 app.get('/login', (req, res) => {
-  const id = req.session.user_id;
-  const templateVars = {
-    user: users[id]
-  };
-  res.render('user_login', templateVars);
+  const user = users[req.session.user_id];
+  if (!user) {
+    const templateVars = {
+      user
+    };
+    return res.render('urls_register', templateVars);
+  } else {
+    return res.redirect('/urls');
+  }
 });
 
 // Edit
