@@ -213,7 +213,7 @@ app.get('/login', (req, res) => {
     const templateVars = {
       user
     };
-    return res.render('urls_register', templateVars);
+    return res.render('user_login', templateVars);
   } else {
     return res.redirect('/urls');
   }
