@@ -102,7 +102,12 @@ const startsWithURLPrefix = (url) => {
 // Browse
 
 app.get('/', (req, res) => {
-  res.send('Hello!');
+  const user = users[req.session.user_id];
+  if (!user) {
+    return res.redirect('/login');
+  } else {
+    return res.redirect('/urls')
+  }
 });
 
 app.get('/urls', (req, res) => {
