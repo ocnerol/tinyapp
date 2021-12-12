@@ -1,9 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 8080; // default port is 8080
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const cookieSession = require('cookie-session');
@@ -12,6 +9,7 @@ const { findUserByEmail,
   urlsForUser,
   ensureWithScheme
 } = require('./helpers');
+const port = 8080; // default port is 8080
 
 app.set('view engine', 'ejs');
 app.use(cookieSession({
@@ -19,8 +17,6 @@ app.use(cookieSession({
   keys: ["polopinkglassSANDtwentyfour"]
 }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(morgan('dev'));
 
 // 'Database'
 
