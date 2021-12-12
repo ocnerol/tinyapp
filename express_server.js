@@ -58,6 +58,7 @@ const users = {
 app.get('/', (req, res) => {
   const user = users[req.session.userID];
   if (!user) {
+    req.session = null;
     return res.redirect('/login');
   } else {
     return res.redirect('/urls');
@@ -67,6 +68,7 @@ app.get('/', (req, res) => {
 app.get('/urls', (req, res) => {
   const user = users[req.session.userID];
   if (!user) {
+    req.session = null;
     const templateVars = {
       user: user
     };
@@ -90,6 +92,7 @@ app.get('/urls', (req, res) => {
 app.get('/urls/new', (req, res) => {
   const user = users[req.session.userID];
   if (!user) {
+    req.session = null;
     return res.redirect('/login');
   }
 
@@ -102,6 +105,7 @@ app.get('/urls/new', (req, res) => {
 app.get('/register', (req, res) => {
   const user = users[req.session.userID];
   if (!user) {
+    req.session = null;
     const templateVars = {
       user,
     };
@@ -118,6 +122,7 @@ app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
 
   if (!user) {
+    req.session = null;
     const templateVars = {
       user
     };
@@ -154,6 +159,7 @@ app.get('/urls/:shortURL', (req, res) => {
 app.get('/login', (req, res) => {
   const user = users[req.session.userID];
   if (!user) {
+    req.session = null;
     const templateVars = {
       user
     };
@@ -188,6 +194,7 @@ app.post('/urls/:shortURL', (req, res) => {
   const user = users[req.session.userID];
 
   if (!user) {
+    req.session = null;
     const templateVars = {
       user: user
     };
@@ -223,6 +230,7 @@ app.post('/urls', (req, res) => {
   const user = users[req.session.userID];
 
   if (!user) {
+    req.session = null;
     const templateVars = {
       user: user
     };
@@ -289,6 +297,7 @@ app.post('/login', (req, res) => {
 
   // render invalid login error message when given email is non-existent
   if (!user) {
+    req.session = null;
     const templateVars = {
       user
     };
@@ -317,6 +326,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   const shortURL = req.params.shortURL;
 
   if (!user) {
+    req.session = null;
     const templateVars = {
       user
     };
